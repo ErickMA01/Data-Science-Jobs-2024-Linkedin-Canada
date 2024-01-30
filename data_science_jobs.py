@@ -43,21 +43,21 @@ df['workType'] = df['workType'].fillna(df['workType'].mode()[0])
 print("\nUpdated information after handling missing values:")
 print(df[['companyId', 'contractType', 'publishedAt', 'salary', 'sector', 'workType']].isnull().sum())
 
-'''
+
 # Explore the distribution of job types
-plt.figure(figsize=(12, 6))
-sns.countplot(x='title', data=df, order=df['title'].value_counts().index)
+df.title.value_counts().nlargest(40).plot(kind='bar', figsize=(10,5))
 plt.title('Distribution of Job Titles in Data Science')
 plt.ylabel('Number of Job Postings')
 plt.xlabel('Job Title')
 plt.show()
+
 
 # Display the most common job titles and their corresponding responsibilities
 common_job_titles = df['title'].value_counts().head(10).index
 for title in common_job_titles:
     responsibilities = df[df['title'] == title]['description'].values[0]
     print(f"\nJob Title: {title}\nResponsibilities:\n{responsibilities}\n{'='*50}")
-'''
+
 
 # Get the count of all unique job titles
 job_title_counts = df['title'].value_counts()
@@ -129,9 +129,10 @@ print(applicants_table)
 # Set the style for the plot
 sns.set(style="whitegrid")
 
-# Create a bar chart of the number of applicants for each job role
+# Create a bar chart of the top 20 job roles by the number of applicants
 plt.figure(figsize=(14, 8))
-applicants_chart = sns.barplot(x='applicationsCount', y='title', data=df, hue='applicationsCount', palette='Blues_d', legend=False)
+applicants_chart = sns.barplot(x='applicationsCount', y='title', data=df.nlargest(20, 'applicationsCount'),
+                               hue='applicationsCount', palette='Blues_d', dodge=False, legend=False)
 
 # Set the title and labels
 plt.title('Number of Applicants for Different Job Roles')
@@ -139,9 +140,11 @@ plt.xlabel('Number of Applicants')
 plt.ylabel('Job Title')
 
 # Display the counts on the bars
-for index, value in enumerate(df['applicationsCount']):
+for index, value in enumerate(df.nlargest(20, 'applicationsCount')['applicationsCount']):
     applicants_chart.text(value, index, str(value), color='black', ha="left", va="center")
 
 # Show the plot
 plt.show()
 '''
+
+
